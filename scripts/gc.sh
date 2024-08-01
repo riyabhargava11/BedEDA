@@ -1,11 +1,12 @@
 #!/bin/bash
 
 roi=$1
-filename=$2
+fasta=$2
+filename=$3
 
 module load BEDTools/2.30.0-GCCcore-10.2.0
 
-bedtools nuc -bed $roi > gc.bed
+bedtools nuc -fi $fasta -bed $roi > gc.bed
 
 head gc.bed
 
