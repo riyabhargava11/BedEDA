@@ -163,7 +163,7 @@ def genome_KDE_per_roi(df):
 	plt.savefig(output_file_genome_KDE_per_roi, dpi=dpi)
 	plt.show()
 	elements.append(Image(output_file_genome_KDE_per_roi, width=400, height=300))
-#    print("Genome-wide Boxplots per ROI complete.")
+#    print("Genome-wide KDEs per ROI complete.")
 
 def genome_KDE_per_ref(df):
 	sns.set(style="whitegrid")
