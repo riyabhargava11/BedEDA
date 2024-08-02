@@ -232,7 +232,7 @@ def chromosome_wise(df,df2):
 		elements.append(Image(output_file_chromosome_kde_per_roi, width=400, height=300))
 		page_break = PageBreak()
 
-    def chromosome_boxplot_per_roi(df):
+	def chromosome_boxplot_per_roi(df):
 #		choicelog = input("Calculate on log scale?: \n1. Yes \n2. No \n(Option 1-2): ")
 #		print(choicelog)
 		category_distances = {category: [] for category in df['ROI Category'].unique()}
