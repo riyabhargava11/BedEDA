@@ -16,7 +16,7 @@ parser.add_argument('--input_table2', required=True, help='Path to input output 
 args=parser.parse_args()
 
 sum = pd.read_csv(args.input_table1,  delimiter='\t')
-df = pd.read_csv(args.input_table2,  delimiter=',')
+df = pd.read_csv(args.input_table2,  delimiter='\t')
 
 print(df.head())
 print("\nColumns:")
