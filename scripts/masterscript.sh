@@ -64,7 +64,7 @@ while true; do
         echo "We are now performing an EDA on the GC Content of the ROIs."
         read -p "Enter the fasta file for the appropriate genome: " reference
         read -p "Enter the output file name: " filename
-        bash distances.sh "$roi" "$reference" "$filename"
+        bash gc.sh "$roi" "$reference" "$filename"
 
         echo "The EDA is complete."
         python_output="python_output_gc.tsv"
