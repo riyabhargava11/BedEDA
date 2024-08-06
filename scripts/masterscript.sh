@@ -24,7 +24,7 @@ while true; do
         if [ "$choice" -eq 1 ]; then 
             module load miniconda
             conda activate chromevo_bivalency_2
-            python summary.py --input_table1 summarytable.tsv --input_table2 "$python_output"
+            python summary.py --input_table1 summarytable.tsv --input_table2 "$filename"
         fi
 
     elif [ "$num" -eq 2 ]; then
@@ -44,7 +44,7 @@ while true; do
             if [ "$choice" -eq 1 ]; then 
                 module load miniconda
                 conda activate chromevo_bivalency_2
-                python summary.py --input_table1 summarytable.tsv --input_table2 "$python_output"
+                python summary.py --input_table1 summarytable.tsv --input_table2 "$filename"
             fi
         elif [ "$answer" -eq 2 ]; then 
             read -p "Enter the output file name: " filename
@@ -56,7 +56,7 @@ while true; do
             if [ "$choice" -eq 1 ]; then 
                 module load miniconda
                 conda activate chromevo_bivalency_2
-                python summary.py --input_table1 summarytable.tsv --input_table2 "$python_output"
+                python summary.py --input_table1 summarytable.tsv --input_table2 "$filename"
             fi
         fi
 
@@ -72,7 +72,7 @@ while true; do
         if [ "$choice" -eq 1 ]; then 
             module load miniconda
             conda activate chromevo_bivalency_2
-            python summary.py --input_table1 summarytable.tsv --input_table2 "$python_output"
+            python summary.py --input_table1 summarytable.tsv --input_table2 "$filename"
         fi
     else
         echo "Invalid option. Please select 1, 2, or 3."
