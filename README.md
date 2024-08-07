@@ -26,8 +26,9 @@ e recommend downloading .bed files containing their chromosome, starting positio
 ## Genome .fa files
 To perform the GC Content EDA, keep an unzipped fasta file with the appropriate genome ready to upload.
 
-# External dependencies are contained in environment.yml
+# Environment Setup
 
+All dependencies are contained in environment.yml. 
 
 ```
 conda env create -f environment.yml
