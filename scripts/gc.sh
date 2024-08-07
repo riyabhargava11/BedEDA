@@ -13,6 +13,6 @@ head gc.bed
 read -p 'Specify columns that correspond to Chromosome, ROI, and GC Content, in that order (e.g. 1,2,3): ' columns
 cut -f$columns gc.bed > $filename
 
-module load miniconda
-conda activate bedEDA-environment.yml
+#module load miniconda
+#conda activate bedEDA-environment.yml
 python gc.py --input_table $filename
