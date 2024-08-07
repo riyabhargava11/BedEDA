@@ -14,5 +14,5 @@ read -p 'Specify columns that correspond to Chromosome, ROI, and GC Content, in 
 cut -f$columns gc.bed > $filename
 
 module load miniconda
-conda activate chromevo_bivalency_2
+conda activate bedEDA-environment.yml
 python gc.py --input_table $filename
