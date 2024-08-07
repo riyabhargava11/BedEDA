@@ -26,6 +26,20 @@ e recommend downloading .bed files containing their chromosome, starting positio
 ## Genome .fa files
 To perform the GC Content EDA, keep an unzipped fasta file with the appropriate genome ready to upload.
 
+# External dependencies are contained in environment.yml
+
+
+```
+conda env create -f environment.yml
+```
+
+To activate the environment, 
+```
+module load miniconda
+conda activate bedEDA_environment
+```
+
+
 # Substring Classification
 Substring classification is the task of assigning labels to specific substrings within a larger string based on their content or context.
 
