@@ -8,7 +8,7 @@ Reference: Depending on the functionality you use, reference elements can refer 
   2. Overlap: You can quantify the overlap between your annotated ROIs and other genomic elements, such as promoters, repeat elements, etc. Most often used to quantify the relationship between ROIs and repeat elements, you can also classify reference elements when you use our Overlap functionality and generate a heatmap between the different types of ROIs and different types of references.
   3. CG Content: You can calculate the CG content of your annotated ROIs.
 
-#Preparing Your Files 
+# Preparing Your Files 
 
 BedEDA takes in .bed files to perform different kinds of exploratory data analysis (EDA) on it. To prepare your .bed file for BedEDA, make sure follow the conventional format: 
 1. chromosome name,
@@ -18,6 +18,6 @@ BedEDA takes in .bed files to perform different kinds of exploratory data analys
 
 If you have chromatin signals associated with ROIs, you can also input them into your .bed file for later application of linear regression between ...
 
-Substring Classification
+# Substring Classification
 Substring classification is the task of assigning labels to specific substrings within a larger string based on their content or context.
 
