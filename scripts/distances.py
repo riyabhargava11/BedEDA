@@ -63,7 +63,7 @@ else:
 df = df.sort_values('Distance')
 
 def distance_dist(df):
-	sns.kdeplot(df['Distance'], color='r', shade=True, label='Distance', cmap="Reds", thresh=0.05)
+	sns.kdeplot(df['Distance'], color='r', shade=True, label='Distance', cmap="Reds", thresh=0.05, warn_singular=False)
 
 	plt.xlabel('Distance')
 	plt.ylabel('Distribution Density')
@@ -90,7 +90,7 @@ def distance_per_roi(df):
 	# Create a KDE plot for each category
 	#for category in df['Category'].unique():
 	#	subset = df[df['Category'] == category]
-	sns.kdeplot(data=df, x='Distance', hue= "Category", palette="Set2", fill=True, common_norm=False, alpha=0.35)
+	sns.kdeplot(data=df, x='Distance', hue= "Category", palette="Set2", fill=True, common_norm=False, alpha=0.35, warn_singular=False)
 
 	plt.xlabel('Distance')  # Label for the x-axis
 	plt.ylabel('Density')  # Label for the y-axis
