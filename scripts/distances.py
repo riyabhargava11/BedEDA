@@ -230,13 +230,13 @@ def chromosome_wise(df):
 		
 	def chromosome_boxplot_per_roi(df):
 
-		category_distances = {category: [] for category in df['ROI Category'].unique()}
+		category_distances = {category: [] for category in df['Category'].unique()}
 		for chr in chrom:
-			for category in df['ROI Category'].unique():
+			for category in df['Category'].unique():
 				df_chr = chromosome_dict.get(chr, pd.DataFrame())
-				category_distances[category].append(df_chr[df_chr['ROI Category'] == category]['Overlap Percentage'])
+				category_distances[category].append(df_chr[df_chr['Category'] == category]['Distance'])
 		plt.figure(figsize=(12, 8))
-		for i, category in enumerate(df['ROI Category'].unique(), 1):
+		for i, category in enumerate(df['Category'].unique(), 1):
 		    plt.subplot(2, 2, i)
 		    plt.boxplot(category_distances[category], notch=True, patch_artist=True)
 		    plt.title(category)
