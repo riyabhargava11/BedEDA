@@ -7,6 +7,11 @@ import argparse
 import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Image, Spacer, PageBreak
+import os
 
 parser=argparse.ArgumentParser()
 
@@ -17,7 +22,7 @@ args=parser.parse_args()
 df = pd.read_csv(args.input_table, sep = '\t', header=None, names=["Chromosome", "ROI", "Reference Name", "Distance"])
 
 output_table = input("Name your output table (without extension): ") + ".tsv"
-df.to_csv(output_table)
+df.to_csv(output_table, sep=”\t”, index=False)
 
 def classification(df):
     # Dictionary to store substrings and their categories
@@ -47,10 +52,15 @@ def classification(df):
     
 	return df
 
-classification(df)
+ROI_choice = input("Do you want to categorize your ROIs? \n1. Yes \n2. No \nOptions(1-2): ")
+if ROI_choice == "1":
+	classification(df)
+	print("Your ROIs have been classified.")
+else: 
+    print("Your ROIs are unclassified.")
+
 # creating a data distribution
 df = df.sort_values('Distance')
-
 
 def distance_dist(df):
 	sns.kdeplot(df['Distance'], color='r', shade=True, label='Distance', cmap="Reds", thresh=0.05)
@@ -63,13 +73,13 @@ def distance_dist(df):
 	plt.legend()
 
     # Prompt the user for the output file name
-	output_file = input("Name your output file (without extension): ") + ".png"
+	output_file_genome_KDE = output_table + "_genome_KDE.png"
 	dpi = 300 
-	plt.savefig(output_file, dpi=dpi)
+	plt.savefig(output_file_genome_KDE, dpi=dpi)
 	plt.show()
+	elements.append(Image(output_file_genome_KDE, width=400, height=300))  
 
 #sns.distance_dist(df).figure.savefig('output_plot.png', dpi=300)
-
 
 def distance_per_roi(df):
 	sns.set(style="whitegrid")
@@ -81,22 +91,15 @@ def distance_per_roi(df):
 	#for category in df['Category'].unique():
 	#	subset = df[df['Category'] == category]
 	sns.kdeplot(data=df, x='Distance', hue= "Category", palette="Set2", fill=True, common_norm=False, alpha=0.35)
-#plt.title('CHR 12: Density of GC Content Distribution for Different ROIs')  # Adds a title
+
 	plt.xlabel('Distance')  # Label for the x-axis
 	plt.ylabel('Density')  # Label for the y-axis
-#	plt.legend(title='Category')  # Adds a legend with a title
-#plt.show()  # Displays the plot
-
-# Setting the axis limits
-# plt.xlim(0, 2000000)  # Adjust these values based on the region you are interested in
-# plt.ylim(0, 0.0001)    # Adjust these values to zoom vertically
-    # Prompt the user for the output file name
-	output_file = input("Name your output file (without extension): ") + ".png"
+	output_file_genome_KDE_per_roi = output_table + "_genome_KDE_per_roi.png"
 	dpi = 300
-	plt.savefig(output_file, dpi=dpi)
-	plt.show()	
-
-
+	plt.savefig(output_file_genome_KDE_per_roi, dpi=dpi)
+	plt.show()
+	elements.append(Image(output_file_genome_KDE_per_roi, width=400, height=300))
+	
 def distance_boxplot(df):
     # Create a dictionary of dataframes for each category
 	categories = {}
@@ -122,19 +125,35 @@ def distance_boxplot(df):
 	plt.grid(True)
 
     # Prompt the user for the output file name
-	output_file = input("Name your output file (without extension): ") + ".png"
+	output_file_genome_roi_boxplot = output_table + "_genome_roi_boxplot.png"
 	dpi = 300  # Set a default dpi for saving the figure
 
     # Save the plot
-	plt.savefig(output_file, dpi=dpi)
+	plt.savefig(output_file_genome_roi_boxplot, dpi=dpi)
 	plt.show()
-
+	elements.append(Image(output_file_genome_roi_boxplot, width=400, height=300))
+	page_break = PageBreak()
 
 def chromosome_wise(df):
 	df = df.sort_values('Chromosome').reset_index(drop=True)
     
     # Get user input for chromosomes
-	user_input = input("Enter the chromosomes you want to use, separated by commas (e.g., 'chr1, chr2, chr3'): ")
+	chrom_choice = input("Number of Chromosomes: Select a species, or, to input a custom number of chromosomes, select 'Custom': \n1. Human \n2. Rhesus Macaque \n3. Rat \n4. Opossum \n5. Mouse \n6. Bull \n.7. Custom \nOption(1-7): ")
+	if chrom_choice == "1":
+		user_input = "chr1, chr2, chr3, chr4, chr5, chr6, chr7, chr8, chr9, chr10, chr11, chr12, chr13, chr14, chr15, chr16, chr17, chr18, chr19, chr20, chr21, chr22, chrX, chrY"
+	elif chrom_choice == "2": 
+		user_input = "chr1, chr2, chr3, chr4, chr5, chr6, chr7, chr8, chr9, chr10, chr11, chr12, chr13, chr14, chr15, chr16, chr17, chr18, chr19, chr20, chrX, chrY"
+	elif chrom_choice == "3":
+		user_input = "chr1, chr2, chr3, chr4, chr5, chr6, chr7, chr8, chr9, chr10, chr11, chr12, chr13, chr14, chr15, chr16, chr17, chr18, chr19, chr20, chrX, chrY"
+	elif chrom_choice == "4":
+		user_input = "chr1, chr2, chr3, chr4, chr5, chr6, chr7, chrUn, chrX, chrY"
+	elif chrom_choice == "5":
+		user_input = "chr1, chr2, chr3, chr4, chr5, chr6, chr7, chr8, chr9, chr10, chr11, chr12, chr13, chr14, chr15, chr16, chr17, chr18, chr19, chrX, chrY"
+	elif chrom_choice == "6": 
+		user_input = "chr1, chr2, chr3, chr4, chr5, chr6, chr7, chr8, chr9, chr10, chr11, chr12, chr13, chr14, chr15, chr16, chr17, chr18, chr19, chr20, chr21, chr22, chr23, chr24, chr25, chr26, chr27, chr28, chr29, chrX, chrY"
+	else:
+		user_input = input("Enter the chromosomes you want to use, separated by commas (e.g., 'chr1, chr2, chr3'): ")
+    
 	chrom = [x.strip() for x in user_input.split(',')]
     
     # Check if the entered chromosomes are present in the DataFrame
@@ -148,8 +167,7 @@ def chromosome_wise(df):
 
 		chromosome_dict[chr] = df_chr
 
-
-	if choice2 == "1":
+	def chromosome_KDE(df):
 		sns.set(font_scale=.5)
 		sns.set_style(style="white")
 		
@@ -172,12 +190,15 @@ def chromosome_wise(df):
 			fig.delaxes(axes[row, col])
 
 		plt.tight_layout()
-		output_file = input("Name your output file (without extension): ") + ".png"
+		output_file_chromosome_kde = output_table + "_chromosome_kde.png"
 		dpi = 300
-		plt.savefig(output_file, dpi=dpi)
+		plt.savefig(output_file_chromosome_kde, dpi=dpi)
 		plt.show()
+
+		elements.append(Image(output_file_chromosome_kde, width=400, height=300))
+		page_break = PageBreak()
 		
-	elif choice2 == "2":
+	def chromosome_kde_per_roi(df):
 		sns.set(font_scale=.5)
 		sns.set_style(style="white")
 		    
@@ -199,21 +220,23 @@ def chromosome_wise(df):
 		    fig.delaxes(axes[row, col])
 
 		plt.tight_layout()
-		output_file = input("Name your output file (without extension): ") + ".png"
+		output_file_chromosome_kde_per_roi = output_table + "_chromosome_kde_per_roi.png"
 		dpi = 300
-		plt.savefig(output_file, dpi=dpi)
+		plt.savefig(output_file_chromosome_kde_per_roi, dpi=dpi)
 		plt.show()
 
-	else:
-		choicelog = input("Calculate on log scale?: \n1. Yes \n2. No \n(Option 1-2): ")
-		print(choicelog)
-		category_distances = {category: [] for category in df['Category'].unique()}
+		elements.append(Image(output_file_chromosome_kde_per_roi, width=400, height=300))
+		page_break = PageBreak()
+		
+	def chromosome_boxplot_per_roi(df):
+
+		category_distances = {category: [] for category in df['ROI Category'].unique()}
 		for chr in chrom:
-			for category in df['Category'].unique():
+			for category in df['ROI Category'].unique():
 				df_chr = chromosome_dict.get(chr, pd.DataFrame())
-				category_distances[category].append(df_chr[df_chr['Category'] == category]['Distance'])
+				category_distances[category].append(df_chr[df_chr['ROI Category'] == category]['Overlap Percentage'])
 		plt.figure(figsize=(12, 8))
-		for i, category in enumerate(df['Category'].unique(), 1):
+		for i, category in enumerate(df['ROI Category'].unique(), 1):
 		    plt.subplot(2, 2, i)
 		    plt.boxplot(category_distances[category], notch=True, patch_artist=True)
 		    plt.title(category)
@@ -222,27 +245,42 @@ def chromosome_wise(df):
 #		    else:
 #		    	break
 		    plt.xlabel('Chromosomes')
-		    plt.ylabel('Distance')
+		    plt.ylabel('Overlap Percentages')
 		plt.tight_layout()
-		output_file = input("Name your output file (without extension): ") + ".png"
-		plt.savefig(output_file, dpi=300)
+		output_file_chromosome_boxplot_per_roi = output_table + "_chromosome_boxplot_per_roi.png"
+		plt.savefig(output_file_chromosome_boxplot_per_roi, dpi=300)
 		plt.show()
 
-choice1 = input("Select one of the following options(1-4): \n1. Genome-wide \n2. By-Chromosome \nOption(1-2): ")
-print(choice1)
-if choice1 == "1":
-	choice2 = input("Select one of the following options(1-4): \n1. KDE \n2. KDE per ROI \n3. Boxplot? \nOption(1-3): ")
-	print(choice2)
-	if choice2 == "1":
-		distance_dist(df)
-	elif choice2 == "2":
-		distance_per_roi(df)
-	else:
-		choicelog = input("Calculate on log scale?: \n1. Yes \n2. No \n(Option 1-2): ")
-		print(choicelog)
-		distance_boxplot(df)
-	
-else: 
-	choice2 = input("Select one of the following options(1-4): \n1. KDE \n2. KDE per ROI \n3. Boxplot? \nOption(1-4): ")
-	print(choice2)
-	chromosome_wise(df)
+		elements.append(Image(output_file_chromosome_boxplot_per_roi, width=400, height=300))
+		page_break = PageBreak()
+	chromosome_KDE(df)
+	chromosome_kde_per_roi(df)
+	chromosome_boxplot_per_roi(df)
+
+#making the pdf file 
+pdf_file = output_table + '.pdf'  # Save the PDF in the current directory
+pdf = SimpleDocTemplate(pdf_file, pagesize=letter)
+elements = []
+
+#defining a spacer
+space = Spacer(width=0, height=20)  # 20 units of vertical space
+
+#appending the figures
+distance_dist(df)
+elements.append(space)
+
+distance_per_roi(df)
+page_break = PageBreak()
+
+choicelog = input("Calculate on log scale?: \n1. Yes \n2. No \n(Option 1-2): ")
+print(choicelog)
+
+distance_boxplot(df)
+page_break = PageBreak()
+
+chromosome_wise(df)
+
+# Build the PDF
+pdf.build(elements)
+
+print(f'PDF saved to {os.path.abspath(pdf_file)}')
